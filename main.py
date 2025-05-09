@@ -1,11 +1,25 @@
-import smtplib
-sender = "hamzawanes01@gmail.com"
-receipient = ['asmahamdym@gmail.com', 'engasmamahrous@gmail.com']
-first_name = 'Asma'
-password = 'Semsemah1'
-subject = 'test'
-message = f'Hi, {first_name}'
+import requests
+from bs4 import BeautifulSoup
 
-smtpObj = smtplib.SMTP("smtp.gmail.com", 587)
-smtpObj.login(sender, password)
-smtpObj.sendmail(sender, receipient, message)
+from collections import defaultdict
+
+def print_unicode_grid(url):
+    # Fetch the document content
+    response = requests.get(url)
+    if response.status_code != 200:
+        print("Failed to fetch the document")
+        return
+    
+    soup = BeautifulSoup(response.text, 'html.parser')
+    table  = soup.find('table')
+    print(table)
+    content = []
+    for row in table.find_all('tr'):
+        columns = row.find_all(['td'])
+        content.append([column.text for column in columns])
+    # print((content))
+       
+    
+
+# Example usage:
+print_unicode_grid('https://docs.google.com/document/d/e/2PACX-1vRMx5YQlZNa3ra8dYYxmv-QIQ3YJe8tbI3kqcuC7lQiZm-CSEznKfN_HYNSpoXcZIV3Y_O3YoUB1ecq/pub')
